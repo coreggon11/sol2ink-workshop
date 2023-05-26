@@ -1,44 +1,32 @@
 #![cfg_attr(not(feature = "std"), no_std)]
+#![feature(min_specialization)]
 
-#[ink::contract]
+#[openbrush::contract]
 mod contract {
+    use openbrush::contracts::psp22::*;
+    use openbrush::traits::Storage;
 
     /// Defines the storage of your contract.
     /// Add new fields to the below struct in order
     /// to add new static storage fields to your contract.
     #[ink(storage)]
+    #[derive(Storage, Default)]
     pub struct Contract {
-        /// Stores a single `bool` value on the storage.
-        value: bool,
+        #[storage_field]
+        data: psp22::Data,
     }
+
+    impl PSP22 for Contract {}
 
     impl Contract {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
-        pub fn new(init_value: bool) -> Self {
-            Self { value: init_value }
-        }
-
-        /// Constructor that initializes the `bool` value to `false`.
-        ///
-        /// Constructors can delegate to other constructors.
-        #[ink(constructor)]
-        pub fn default() -> Self {
-            Self::new(Default::default())
-        }
-
-        /// A message that can be called on instantiated contracts.
-        /// This one flips the value of the stored `bool` from `true`
-        /// to `false` and vice versa.
-        #[ink(message)]
-        pub fn flip(&mut self) {
-            self.value = !self.value;
-        }
-
-        /// Simply returns the current value of our `bool`.
-        #[ink(message)]
-        pub fn get(&self) -> bool {
-            self.value
+        pub fn new(total_supply: Balance) -> Self {
+            let mut instance = Self::default();
+            instance
+                ._mint_to(Self::env().caller(), total_supply)
+                .expect("Unable to mint tokens to caller");
+            instance
         }
     }
 
@@ -49,24 +37,35 @@ mod contract {
     mod tests {
         /// Imports all the definitions from the outer scope so we can use them here.
         use super::*;
+        use openbrush::test_utils::{accounts, change_caller};
 
-        /// We test if the default constructor does its job.
         #[ink::test]
-        fn default_works() {
-            let contract = Contract::default();
-            assert_eq!(contract.get(), false);
+        fn new_works() {
+            let total_supply = 1_000_000;
+            let accounts = accounts();
+
+            let contract = Contract::new(total_supply);
+
+            assert_eq!(contract.total_supply(), total_supply);
+            assert_eq!(contract.balance_of(accounts.alice), total_supply);
         }
 
-        /// We test a simple use case of our contract.
         #[ink::test]
-        fn it_works() {
-            let mut contract = Contract::new(false);
-            assert_eq!(contract.get(), false);
-            contract.flip();
-            assert_eq!(contract.get(), true);
+        fn can_not_transfer_without_allowance() {
+            let transfer_amount = 10_000;
+            let total_supply = 10_000_000;
+            let accounts = accounts();
+
+            let mut contract = Contract::new(total_supply);
+
+            change_caller(accounts.bob);
+
+            assert_eq!(contract.balance_of(accounts.alice), total_supply);
+
+            let tx = contract.transfer_from(accounts.alice, accounts.bob, transfer_amount, vec![]);
+            assert!(tx.is_err());
         }
     }
-
 
     /// This is how you'd write end-to-end (E2E) or integration tests for ink! contracts.
     ///
@@ -108,7 +107,7 @@ mod contract {
 
         /// We test that we can read and write a value from the on-chain contract contract.
         #[ink_e2e::test]
-        async fn it_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
+        async fn it_works_2(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             // Given
             let constructor = ContractRef::new(false);
             let contract_account_id = client
