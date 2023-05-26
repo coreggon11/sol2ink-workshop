@@ -1,0 +1,8 @@
+1. rustup toolchain install nightly-2023-01-01
+2. rustup default nightly-2023-01-01
+3. cargo install cargo-contract --version 2.2.1
+    (can use rustup toolchain default nightly-2023-01-01)
+4. get Sol2ink (https://github.com/Brushfam/sol2ink)
+5. Download ERC20.sol from https://github.com/Brushfam/sol2ink/tree/main/examples
+6. cargo install contracts-node --git https://github.com/paritytech/substrate-contracts-node.git 
+    (or download release from git)
