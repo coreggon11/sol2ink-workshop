@@ -1,5 +1,5 @@
 [package]
-name = "contract"
+name = "fungible-token"
 version = "0.1.0"
 authors = ["Dominik Krížo <dominik.krizo@727.ventures>"]
 edition = "2021"
