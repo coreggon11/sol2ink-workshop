@@ -5,6 +5,7 @@
 mod contract {
     use openbrush::contracts::psp22::*;
     use openbrush::traits::Storage;
+    use workshop::impls::staking::*;
 
     /// Defines the storage of your contract.
     /// Add new fields to the below struct in order
@@ -14,9 +15,13 @@ mod contract {
     pub struct Contract {
         #[storage_field]
         data: psp22::Data,
+        #[storage_field]
+        staking_data: StakingData,
     }
 
     impl PSP22 for Contract {}
+
+    impl Staking for Contract {}
 
     impl Contract {
         /// Constructor that initializes the `bool` value to the given `init_value`.

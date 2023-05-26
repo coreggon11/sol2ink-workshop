@@ -1,5 +1,5 @@
 [package]
-name = "fungible-token"
+name = "workshop"
 version = "0.1.0"
 authors = ["Dominik Krížo <dominik.krizo@727.ventures>"]
 edition = "2021"
@@ -10,12 +10,12 @@ ink = { version = "4.1.0", default-features = false }
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.3", default-features = false, features = ["derive"], optional = true }
 openbrush = { git="https://www.github.com/Brushfam/openbrush-contracts.git", tag="3.1.1", default-features = false, features = ["psp22"]}
-workshop = { path="../../src", default-features = false }
 
 [dev-dependencies]
 ink_e2e = "4.1.0"
 
 [lib]
+name = "workshop"
 path = "lib.rs"
 
 [features]
@@ -24,8 +24,7 @@ std = [
     "ink/std",
     "scale/std",
     "scale-info/std",
-    "openbrush/std",
-    "workshop/std",
+    "openbrush/std"
 ]
 ink-as-dependency = []
 e2e-tests = []
