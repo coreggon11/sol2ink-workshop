@@ -18,7 +18,9 @@ impl<T> Staking for T
 where
     T: Storage<StakingData>,
 {
-    fn stake(&mut self, amount: Balance) {}
+    fn stake(&mut self, amount: Balance) {
+        
+    }
 
     fn unstake(&mut self, amount: Balance) {}
 }

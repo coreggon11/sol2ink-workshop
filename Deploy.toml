@@ -1,0 +1,2 @@
+cargo_contract_version = "2.2.1"
+rustc_version = "1.68.0"
