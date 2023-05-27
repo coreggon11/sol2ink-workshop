@@ -1,3 +1,7 @@
+### Useful links
+
+[use.ink](url)
+
 ### Install Rust
 
 https://doc.rust-lang.org/cargo/getting-started/installation.html
