@@ -1,3 +1,7 @@
+### Install Rust
+
+https://doc.rust-lang.org/cargo/getting-started/installation.html
+
 ### OpenBrush
 
 https://github.com/Brushfam/openbrush-contracts
