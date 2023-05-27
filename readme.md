@@ -1,6 +1,6 @@
 ### Useful links
 
-[use.ink](url)
+https://use.ink
 
 ### Install Rust
 
